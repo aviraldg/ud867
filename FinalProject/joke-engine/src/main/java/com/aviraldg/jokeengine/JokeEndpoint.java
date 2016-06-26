@@ -17,7 +17,7 @@ import javax.inject.Named;
  * An endpoint class we are exposing
  */
 @Api(
-        name = "joke",
+        name = "jokeApi",
         version = "v1",
         namespace = @ApiNamespace(
                 ownerDomain = "jokeengine.aviraldg.com",

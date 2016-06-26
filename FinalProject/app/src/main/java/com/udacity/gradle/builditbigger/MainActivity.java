@@ -1,14 +1,24 @@
 package com.udacity.gradle.builditbigger;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.aviraldg.displayerofjokes.JokeDisplayActivity;
+import com.aviraldg.jokeengine.jokeApi.JokeApi;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
-public class MainActivity extends ActionBarActivity {
+import java.io.IOException;
+
+
+public class MainActivity extends AppCompatActivity {
+    AsyncTask<Void, Void, String> jokeLoaderAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +49,27 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view){
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
+    public void tellJoke(View view) {
+        jokeLoaderAsyncTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                JokeApi api = new JokeApi.Builder(AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(), null)
+                        .setRootUrl("https://paybble.appspot.com/_ah/api/")
+                        .build();
+                try {
+                    return api.getJoke().execute().getContent();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String joke) {
+                startActivity(JokeDisplayActivity.getIntent(MainActivity.this, joke));
+            }
+        };
+        jokeLoaderAsyncTask.execute();
     }
-
-
 }

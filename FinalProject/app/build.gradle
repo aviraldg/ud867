@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.udacity.gradle.builditbigger"
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion 16
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -17,13 +17,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        free {
+            dependencies {
+                compile 'com.google.android.gms:play-services-ads:9.0.2'
+            }
+        }
+
+        paid {
+
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // Added for AdMob
     compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.google.android.gms:play-services:9.0.2'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile project(path: ':joke-engine', configuration: 'android-endpoints')
+    compile project(':displayer-of-jokes')
 }
